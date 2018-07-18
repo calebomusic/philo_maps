@@ -11,13 +11,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180718172505) do
+ActiveRecord::Schema.define(version: 20180718215312) do
+
+  create_table "conditional_antecedents", force: :cascade do |t|
+    t.integer  "proposition_id", null: false
+    t.integer  "conditional_id", null: false
+    t.boolean  "truth_value",    null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "conditional_consequents", force: :cascade do |t|
+    t.boolean  "truth_value",    null: false
+    t.integer  "consequent_id",  null: false
+    t.integer  "conditional_id", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "conditionals", force: :cascade do |t|
+    t.boolean  "truth_value", default: true, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
 
   create_table "propositions", force: :cascade do |t|
-    t.string   "statement",   null: false
-    t.boolean  "truth_value", null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "statement",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
