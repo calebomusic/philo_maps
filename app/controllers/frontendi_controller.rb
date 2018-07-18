@@ -1,0 +1,2 @@
+class FrontendiController < ApplicationController
+end
