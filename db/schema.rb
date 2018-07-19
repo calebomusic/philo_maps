@@ -14,7 +14,7 @@
 ActiveRecord::Schema.define(version: 20180718215312) do
 
   create_table "conditional_antecedents", force: :cascade do |t|
-    t.integer  "proposition_id", null: false
+    t.integer  "antecedent_id",  null: false
     t.integer  "conditional_id", null: false
     t.boolean  "truth_value",    null: false
     t.datetime "created_at",     null: false

@@ -3,7 +3,8 @@
  * Proposition
  * @param statement text
  * @param truth_value boolean
- * @param conditional_ids array of ids
+ * @param consequent_ids array of ids to conditionals where proposition is a consequent
+ * @param antecdent_ids array of ids to conditionals where proposition is a antecdent
  */
 class Proposition {
   constructor (props) {
@@ -26,7 +27,8 @@ class Proposition {
  * @param truth_value boolean
  * @param antecedent_ids array of ids
  * @param consequent_ids array of ids
- * @param proposition_truth_values map of proposition ids to truth_values for the conditional
+ * @param antecdent_truth_values map of proposition ids to truth_values
+ * @param consequent_truth_values map of proposition ids to truth_values
  */
 class Conditional {
   constructor (props) {
