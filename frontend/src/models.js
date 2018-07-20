@@ -101,6 +101,7 @@ class Context {
  * @param truth_value boolean
  * @param consequent_ids array of ids to conditionals where proposition is a consequent
  * @param antecedent_ids array of ids to conditionals where proposition is a antecdent
+ * @param disjunctions array of ids to disjunctions where proposition is a disjunct
  */
 class Proposition {
   constructor (props) {
@@ -130,6 +131,12 @@ class Conditional {
   }
 }
 
+/**
+ * Disjunction
+ * @param truth_value boolean
+ * @param disjunct_ids array of ids
+ * @param disjunct_truth_values map of disjunct ids to truth_values
+ */
 class Disjunction {
   constructor (props) {
 

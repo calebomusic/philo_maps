@@ -11,10 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180718215312) do
+ActiveRecord::Schema.define(version: 20180720171214) do
+
+  create_table "conditional_antecedent_disjunctions", force: :cascade do |t|
+    t.integer  "disjunction_id", null: false
+    t.integer  "conditional_id", null: false
+    t.boolean  "truth_value",    null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
 
   create_table "conditional_antecedents", force: :cascade do |t|
     t.integer  "antecedent_id",  null: false
+    t.integer  "conditional_id", null: false
+    t.boolean  "truth_value",    null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "conditional_consequent_disjunctions", force: :cascade do |t|
+    t.integer  "disjunction_id", null: false
     t.integer  "conditional_id", null: false
     t.boolean  "truth_value",    null: false
     t.datetime "created_at",     null: false
@@ -33,6 +49,19 @@ ActiveRecord::Schema.define(version: 20180718215312) do
     t.boolean  "truth_value", default: true, null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+  end
+
+  create_table "disjunctions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "disjuncts", force: :cascade do |t|
+    t.integer  "disjunct_id",    null: false
+    t.integer  "disjunction_id", null: false
+    t.boolean  "truth_value",    null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "propositions", force: :cascade do |t|
