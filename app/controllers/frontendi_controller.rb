@@ -7,7 +7,7 @@ class FrontendiController < ApplicationController
       obj = proposition.attributes 
       obj[:antecedent_ids] = ConditionalAntecedent.joins(:conditional).where(id: proposition.id).pluck("conditionals.id")
       obj[:consequent_ids] = ConditionalConsequent.joins(:conditional).where(id: proposition.id).pluck("conditionals.id")
-      obj[:disjunctions] = proposition.disjunctions.pluck(:id)
+      obj[:disjunction_ids] = proposition.disjunctions.pluck(:id)
       proposition_map[proposition.id] = obj
     end
 
@@ -67,11 +67,13 @@ class FrontendiController < ApplicationController
     disjunctions.each do |disjunction|
       obj = disjunction.attributes
       disjuncts = disjunction.disjuncts
-      obj[:disjunct_ids] = disjuncts.pluck(:id)
+      obj[:disjunct_ids] = disjuncts.pluck(:disjunct_id)
 
       disjunct_truth_values = {}
-      disjuncts.each { |d| disjunct_truth_values[d.id] = d.truth_value }
+      disjuncts.each { |d| disjunct_truth_values[d.disjunct_id] = d.truth_value }
       obj[:disjunct_truth_values] = disjunct_truth_values
+      obj[:antecedent_ids] = ConditionalAntecedentDisjunction.joins(:conditional).where(disjunction_id: disjunction.id).pluck("conditionals.id")
+      obj[:consequent_ids] = ConditionalConsequentDisjunction.joins(:conditional).where(disjunction_id: disjunction.id).pluck("conditionals.id")
 
       disjunctions_map[disjunction.id] = obj
     end
