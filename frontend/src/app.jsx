@@ -11,9 +11,7 @@ class App extends Component {
     super(props);
 
     const {context} = this.props;
-    // TODO: TESTING
-    const propositionIdx = 0;
-    // const propositionIdx = Math.round(Math.random() * (Object.keys(context.propositions).length - 1));
+    const propositionIdx = Math.round(Math.random() * (Object.keys(context.propositions).length - 1));
     const currentProposition = context.propositions[Object.keys(context.propositions)[propositionIdx]];
 
     this.state = {
@@ -83,7 +81,7 @@ class App extends Component {
     const userPropositionEls = [];
 
     userPropositionIds.forEach((id, i) => {
-      userPropositionEls.push(<div key={i}>{this.props.context.propositions[id].statement}</div>)
+      userPropositionEls.push(<div key={i}><p>{this.props.context.propositions[id].statement}</p><i>{this.props.context.propositions[id].truth_value.toString()}</i></div>)
     })
 
     return userPropositionEls;
@@ -94,7 +92,7 @@ class App extends Component {
     const secondPropositionEls = [];
 
     secondPropositionIds.forEach((id, i) => {
-      secondPropositionEls.push(<div key={i}>{this.props.context.propositions[id].statement}</div>);
+      secondPropositionEls.push(<div key={i}><p>{this.props.context.propositions[id].statement}</p><i>{this.props.context.propositions[id].truth_value.toString()}</i></div>);
     })
 
     return secondPropositionEls;

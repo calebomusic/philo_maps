@@ -36,7 +36,54 @@ class Context {
   // TODO handle two conjunct tollens case (a && b => c. ~c => ~a || ~b)
   updateAntecedents (conditional) {
     console.log(`Updating antecedents for conditional: ${conditional.id}`);
-    console.log(`TODO`);
+    
+    // propositions
+    const antecedent_ids = conditional.antecedent_ids;
+    const antecedent_disjunction_ids = conditional.antecedent_disjunction_ids;
+    
+    if (antecedent_ids.length === 1) {
+      const id = antecedent_ids[0];
+      const proposition = this.propositions[id];
+      const truth_value = conditional.antecedent_truth_values[id];
+      proposition.truth_value = !truth_value;
+      proposition.user = false;
+      this.conditionalEvaluation(proposition);
+      this.propositionsDisjunctionEvaluation(proposition);
+    } else if (antecedent_disjunction_ids.length === 1) {
+      const id = antecedent_disjunction_ids[0];
+      const disjunction = this.disjunctions[id];
+      const truth_value = conditional.antecedent_truth_values[id];
+      disjunction.truth_value = !truth_value;
+      disjunction.user = false;
+      this.disjunctionEvaluation(disjunction, false);
+    } else {
+      // Handle a && b
+      // TODO: ignores a && (b || c)
+      if (antecedent_ids.length > 0) {
+        
+        const newDisjunction = {id: Object.keys(this.disjunctions).length * -1 };
+        const newConditional = { id: Object.keys(this.conditional).length * -1 };
+        newDisjunction.disjunct_ids = antecedent_ids.slice();
+        newDisjunction.antecedent_ids = [];
+        newDisjunction.consequent_ids = [newConditional.id];
+        newDisjunction.disjunct_truth_values = {};
+
+        for(let id of antecedent_ids) {
+          newDisjunction.disjunct_truth_values[id] = !conditional.antecdent_truth_values[id];
+        }
+
+        this.disjunctions[newDisjunction.id] = newDisjunction;
+
+        newConditional.truth_value = true
+        newConditional.consequent_disjunction_ids = [newDisjunction.id]
+        newConditional.antecedent_ids = conditional.consequent_ids.slice()
+        newConditional.antecedent_disjunction_ids = conditional.antecedent_disjunction_ids.slice();
+        newConditional.antecedent_truth_values = conditional.consequent_truth_values
+        newConditional.disjunction_truth_values = newConditional.disjunction_truth_values;
+
+        this.conditionals[newConditional.id] = newConditional;
+      }
+    }
   }
 
   // Handle disjunctions
@@ -58,6 +105,7 @@ class Context {
         console.log(`Updated consequent ${proposition.id} to ${proposition.truth_value}`)
         propositionNum ++;
         this.conditionalEvaluation(proposition);
+        this.propositionsDisjunctionEvaluation(proposition);
       }
     }
 
@@ -70,7 +118,7 @@ class Context {
         this.forceUpdate();
         console.log(`Updated consequent disjunction ${disjunction.id} to ${disjunction.truth_value}`)
         propositionNum ++;
-        this.disjunctionEvaluation(disjunction);
+        this.disjunctionEvaluation(disjunction, false);
       }
     }
 
@@ -142,7 +190,7 @@ class Context {
     });
   }
 
-  disjunctionEvaluation = (disjunction) => {
+  disjunctionEvaluation = (disjunction, isUser = true) => {
     console.log(`Begin disjunction evaluation for disjunction ${disjunction.id}`)
     for(let id of disjunction.disjunct_ids) {
       console.log(id)
@@ -151,6 +199,7 @@ class Context {
       if (disjunct.truth_value === truth_value) {
         console.log(`Disjunction ${disjunction.id} obtains`)
         disjunction.truth_value = true;
+        disjunction.user = isUser;
         console.log(`Begin modus and tollens check for disjunction ${disjunction.id}`)
         // Update disjunctions
         this.ponensCheckDisjunction(disjunction);
