@@ -36,7 +36,6 @@ class Context {
   // TODO handle two conjunct tollens case (a && b => c. ~c => ~a || ~b)
   updateAntecedents (conditional) {
     console.log(`Updating antecedents for conditional: ${conditional.id}`);
-    
     // propositions
     const antecedent_ids = conditional.antecedent_ids;
     const antecedent_disjunction_ids = conditional.antecedent_disjunction_ids;
@@ -52,13 +51,14 @@ class Context {
     } else if (antecedent_disjunction_ids.length === 1) {
       const id = antecedent_disjunction_ids[0];
       const disjunction = this.disjunctions[id];
-      const truth_value = conditional.antecedent_truth_values[id];
+      const truth_value = conditional.disjunction_truth_values[id];
       disjunction.truth_value = !truth_value;
       disjunction.user = false;
       this.disjunctionEvaluation(disjunction, false);
     } else {
       // Handle a && b
       // TODO: ignores a && (b || c)
+      debugger
       if (antecedent_ids.length > 0) {
         
         const newDisjunction = {id: Object.keys(this.disjunctions).length * -1 };

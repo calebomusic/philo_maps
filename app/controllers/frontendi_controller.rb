@@ -5,8 +5,8 @@ class FrontendiController < ApplicationController
     proposition_map = {}
     propositions.each do |proposition| 
       obj = proposition.attributes 
-      obj[:antecedent_ids] = ConditionalAntecedent.joins(:conditional).where(id: proposition.id).pluck("conditionals.id")
-      obj[:consequent_ids] = ConditionalConsequent.joins(:conditional).where(id: proposition.id).pluck("conditionals.id")
+      obj[:antecedent_ids] = ConditionalAntecedent.joins(:conditional).where(antecedent_id: proposition.id).pluck("conditionals.id")
+      obj[:consequent_ids] = ConditionalConsequent.joins(:conditional).where(consequent_id: proposition.id).pluck("conditionals.id")
       obj[:disjunction_ids] = proposition.disjunctions.pluck(:id)
       proposition_map[proposition.id] = obj
     end
