@@ -1,0 +1,7 @@
+class CreateDisjunctions < ActiveRecord::Migration
+  def change
+    create_table :disjunctions do |t|
+      t.timestamps null: false
+    end
+  end
+end
