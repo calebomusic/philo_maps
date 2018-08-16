@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20180720171214) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "conditional_antecedent_disjunctions", force: :cascade do |t|
     t.integer  "disjunction_id", null: false
     t.integer  "conditional_id", null: false

@@ -1,0 +1,4 @@
+id,Proposition ids,Comments
+2,"6t,7t",You can leave the id column blank and I'll use the num of the row
+3,"14t,15t,16t","Propositions ids should be separated by comma with their truth value following the ids (Ex: 1t,2f,3t)"
+4,"17t,18t",

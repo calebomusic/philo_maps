@@ -11,6 +11,7 @@ class Context {
     // proposition
     const antecedent_ids = conditional.antecedent_ids;
     for(let id of antecedent_ids) {
+      console.log(`checking proposition ${id}`)
       const proposition = this.propositions[id];
       if (proposition.truth_value !== conditional.antecedent_truth_values[id]) {
         console.log(`proposition antecedent did not obtain for conditonal ${conditional.id}`)
@@ -21,6 +22,7 @@ class Context {
     // disjunction
     const antecedent_disjunction_ids = conditional.antecedent_disjunction_ids
     for(let id of antecedent_disjunction_ids) {
+      console.log(`checking disjunction ${id}`)
       const disjunction = this.disjunctions[id]
       if (disjunction.truth_value !== conditional.disjunction_truth_values[id]) {
         console.log(`disjunction antecedent did not obtain for conditonal ${conditional.id}`)
@@ -58,18 +60,17 @@ class Context {
     } else {
       // Handle a && b
       // TODO: ignores a && (b || c)
-      debugger
       if (antecedent_ids.length > 0) {
         
         const newDisjunction = {id: Object.keys(this.disjunctions).length * -1 };
-        const newConditional = { id: Object.keys(this.conditional).length * -1 };
+        const newConditional = { id: Object.keys(this.conditionals).length * -1 };
         newDisjunction.disjunct_ids = antecedent_ids.slice();
         newDisjunction.antecedent_ids = [];
         newDisjunction.consequent_ids = [newConditional.id];
         newDisjunction.disjunct_truth_values = {};
 
         for(let id of antecedent_ids) {
-          newDisjunction.disjunct_truth_values[id] = !conditional.antecdent_truth_values[id];
+          newDisjunction.disjunct_truth_values[id] = !conditional.antecedent_truth_values[id];
         }
 
         this.disjunctions[newDisjunction.id] = newDisjunction;
@@ -133,6 +134,7 @@ class Context {
     
     // propositions
     for(let id of consequent_ids) {
+      console.log(`checking proposition ${id}`)
       const proposition = this.propositions[id];
       if (proposition.truth_value !== undefined && proposition.truth_value !== conditional.consequent_truth_values[id]) {
         console.log(`Modus tollens found for conditional ${conditional.id}`);
@@ -143,6 +145,7 @@ class Context {
 
     // disjunctions
     for (let id of consequent_disjunction_ids) {
+      console.log(`checking disjunction ${id}`)
       const disjunction = this.disjunctions[id];
       if (disjunction.truth_value !== undefined && disjunction.truth_value !== conditional.disjunction_truth_values[id]) {
         console.log(`Modus tollens found for conditional ${conditional.id}`);
@@ -227,7 +230,7 @@ class Context {
  * @param statement text
  * @param truth_value boolean
  * @param consequent_ids array of ids to conditionals where proposition is a consequent
- * @param antecedent_ids array of ids to conditionals where proposition is a antecdent
+ * @param antecedent_ids array of ids to conditionals where proposition is a antecedent
  * @param disjunctions array of ids to disjunctions where proposition is a disjunct
  */
 class Proposition {
@@ -245,7 +248,7 @@ class Proposition {
  * @param truth_value boolean
  * @param antecedent_ids array of ids
  * @param consequent_ids array of ids
- * @param antecdent_truth_values map of proposition ids to truth_values
+ * @param antecedent_truth_values map of proposition ids to truth_values
  * @param consequent_truth_values map of proposition ids to truth_values
  */
 class Conditional {
