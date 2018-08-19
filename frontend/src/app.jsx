@@ -64,7 +64,7 @@ class App extends Component {
 
   renderFreeProposition = () => {
     if (this.state.currentProposition) {
-      return <div className="current-proposition">
+      return <div className="card current-proposition">
         <p><i>{this.state.currentProposition.statement}</i></p>
         <div className="true-false-btns">
           <span className="btn" onClick={() => this.props.context.setPropositionTruthValue(this.state.currentProposition, true)}>True</span>
@@ -72,7 +72,7 @@ class App extends Component {
         </div>
       </div>
     } else {
-      return <div className="no-more-propositions">No more propositions!</div>
+      return <div className="card no-more-propositions">No more propositions!</div>
     }
   }
 
@@ -81,7 +81,7 @@ class App extends Component {
     const userPropositionEls = [];
 
     userPropositionIds.forEach((id, i) => {
-      userPropositionEls.push(<div key={i}><p>{this.props.context.propositions[id].statement}</p><i>{this.props.context.propositions[id].truth_value.toString()}</i></div>)
+      userPropositionEls.push(<div className="card" key={i}><p>{this.props.context.propositions[id].statement}</p><i>{this.props.context.propositions[id].truth_value.toString()}</i></div>)
     })
 
     return userPropositionEls;
@@ -92,7 +92,7 @@ class App extends Component {
     const secondPropositionEls = [];
 
     secondPropositionIds.forEach((id, i) => {
-      secondPropositionEls.push(<div key={i}><p>{this.props.context.propositions[id].statement}</p><i>{this.props.context.propositions[id].truth_value.toString()}</i></div>);
+      secondPropositionEls.push(<div className="card" key={i}><p>{this.props.context.propositions[id].statement}</p><i>{this.props.context.propositions[id].truth_value.toString()}</i></div>);
     })
 
     return secondPropositionEls;
@@ -101,18 +101,18 @@ class App extends Component {
   render () {
     return (
       <div className="app">
-        <div className="header">PhiloMaps</div>
+        <div className="header"><p>PhiloMaps</p></div>
         <div className="content">
           <div className="tower-1">
-            <div>Your propositions</div>
+            <div className="tower-header"><p>Your propositions</p></div>
             {this.renderUserPropositions()}
           </div>
           <div className="center">
-            <div>Is the following proposition true or false:</div>
+            <div className="tower-header"><p>Is the following proposition true or false:</p></div>
             {this.renderFreeProposition()}
           </div>
           <div className="tower-2">
-            <div>Entailments</div>
+            <div className="tower-header"><p>Entailments</p></div>
             {this.renderSecondPropositions()}
           </div>
         </div>
