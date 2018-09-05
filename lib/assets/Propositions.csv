@@ -1,4 +1,4 @@
-Id,Statement,Comments
+Id,Proposition,Comments
 2,every phenomenal property is relevant to causally explaining some caused event with physical properties (phenomenal efficacy),"You can leave the id column blank, it's there for reference in case nec"
 3,every property relevant to causally explaining caused events with physical properties is itself fully grounded in physical properties (physical non-overdetermination),
 4,every truth about consciousness is a truth about phenomenal properties (consciousness-phenomenality identity),
@@ -10,7 +10,7 @@ Id,Statement,Comments
 10,"for every actual particular x (event, object, process, etc), there is some physical particular y such that x is identical to y (token physicalism)",
 11,"for every actually instantiated property F, there is some physical property G such that F is identical to G (type physicalism)",
 12,every property instantiated is either identical to a physical property or fully grounded in a physical property (grounding physicalism),
-13,every caused event with physical properties has a full causal explanation in purely physical terms (negation of causal completeness of physics),
+13,every caused event with physical properties has a full causal explanation in purely physical terms (causal completeness of physics),
 14,there is a caused event with physical properties that has no full causal explanation,
 15,there is a caused event with physical properties such that it has a full causal explanation and any full causal explanation of it is in partially non-physical terms,
 16,there is a caused event with physical properties that has a full causal explanation in purely non-physical terms,
