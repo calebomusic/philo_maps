@@ -160,7 +160,7 @@ class App extends Component {
         {contradiction && this.renderContradictions()}
         <div className="content">
           <div className="tower-1">
-            <div className="tower-header"><p>Your propositions {userPropositionIds.length} </p></div>
+            <div className="tower-header"><p>Your propositions</p></div>
             {this.renderUserPropositions()}
           </div>
           <div className="center">
