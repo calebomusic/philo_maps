@@ -35,6 +35,19 @@ class Context {
     return true;
   }
 
+  updateTruthValue(el, truth_value, isUser = null) {
+    isUser = isUser || el.user;
+
+    if (el.truth_value !== undefined && el.truth_value !== truth_value && isUser) {
+      console.log("contradiction:")
+      console.log(el)
+      el.contradiction = true;
+    } else {
+      el.truth_value = truth_value;
+      el.user = isUser || false;
+    }
+  }
+
   // TODO handle two conjunct tollens case (a && b => c. ~c => ~a || ~b)
   updateAntecedents (conditional) {
     console.log(`Updating antecedents for conditional: ${conditional.id}`);
@@ -45,17 +58,18 @@ class Context {
     if (antecedent_ids.length === 1) {
       const id = antecedent_ids[0];
       const proposition = this.propositions[id];
-      const truth_value = conditional.antecedent_truth_values[id];
-      proposition.truth_value = !truth_value;
-      proposition.user = false;
+      const truth_value = !conditional.antecedent_truth_values[id]
+
+      this.updateTruthValue(proposition, truth_value);
       this.conditionalEvaluation(proposition);
       this.propositionsDisjunctionEvaluation(proposition);
     } else if (antecedent_disjunction_ids.length === 1) {
       const id = antecedent_disjunction_ids[0];
       const disjunction = this.disjunctions[id];
-      const truth_value = conditional.disjunction_truth_values[id];
-      disjunction.truth_value = !truth_value;
-      disjunction.user = false;
+      const truth_value = !conditional.disjunction_truth_values[id];
+      
+      this.updateTruthValue(disjunction, truth_value);
+      this.updateTruthValue(disjunction, !truth_value);
       this.disjunctionEvaluation(disjunction, false);
     } else {
       // Handle a && b
@@ -99,8 +113,8 @@ class Context {
     for(let id of consequent_ids) {
       const proposition = this.propositions[id];
       if (proposition.truth_value !== conditional.consequent_truth_values[id]) {
-        proposition.truth_value = conditional.consequent_truth_values[id];
-        proposition.user = false;
+        const truth_value = conditional.consequent_truth_values[id];
+        this.updateTruthValue(proposition, truth_value);
         this.forceUpdate();
 
         console.log(`Updated consequent ${proposition.id} to ${proposition.truth_value}`)
@@ -114,8 +128,8 @@ class Context {
     for(let id of consequent_disjunction_ids) {
       const disjunction = this.disjunctions[id];
       if (disjunction.truth_value !== conditional.disjunction_truth_values[id]) {
-        disjunction.truth_value = conditional.disjunction_truth_values[id];
-        disjunction.user = false;
+        const truth_value = conditional.disjunction_truth_values[id];
+        this.updateTruthValue(disjunction, truth_value);
         this.forceUpdate();
         console.log(`Updated consequent disjunction ${disjunction.id} to ${disjunction.truth_value}`)
         propositionNum ++;
@@ -159,9 +173,9 @@ class Context {
   }
 
   conditionalEvaluation = (proposition) => {
-    console.log(`Begin conditionalEvaluation for proposition ${proposition.id}`)
+    console.log(`Begin conditionalEvaluation for proposition ${proposition.id}`);
     if (!proposition || proposition.truth_value === null) {
-      console.log("Invalid: No proposition or truth value")
+      console.log("Invalid: No proposition or truth value");
       return 
     }
     
@@ -201,8 +215,7 @@ class Context {
       const truth_value = disjunction.disjunct_truth_values[id];
       if (disjunct.truth_value === truth_value) {
         console.log(`Disjunction ${disjunction.id} obtains`)
-        disjunction.truth_value = true;
-        disjunction.user = isUser;
+        this.updateTruthValue(disjunction, true, isUser);
         console.log(`Begin modus and tollens check for disjunction ${disjunction.id}`)
         // Update disjunctions
         this.ponensCheckDisjunction(disjunction);
@@ -221,55 +234,6 @@ class Context {
 
   tollensCheckDisjunction(disjunction) {
     disjunction.consequent_ids.forEach(id => this.tollensCheck(this.conditionals[id]))
-  }
-
-}
-
-/**
- * Proposition
- * @param statement text
- * @param truth_value boolean
- * @param consequent_ids array of ids to conditionals where proposition is a consequent
- * @param antecedent_ids array of ids to conditionals where proposition is a antecedent
- * @param disjunctions array of ids to disjunctions where proposition is a disjunct
- */
-class Proposition {
-  constructor (props) {
-    const {statement, consequent_ids, antecedent_ids} = props
-    this.statement = statement;
-    this.truth_value = null;
-    this.consequent_ids = consequent_ids;
-    this.antecedent_ids = antecedent_ids;
-  }
-}
-
-/**
- * Conditional
- * @param truth_value boolean
- * @param antecedent_ids array of ids
- * @param consequent_ids array of ids
- * @param antecedent_truth_values map of proposition ids to truth_values
- * @param consequent_truth_values map of proposition ids to truth_values
- */
-class Conditional {
-  constructor (props) {
-    const {truth_value, antecedent_ids, consequent_ids, proposition_truth_values} = props;
-    this.truth_value = truth_value
-    this.antecedent_ids = antecedent_ids
-    this.consequent_ids = consequent_ids
-    this.proposition_truth_values = proposition_truth_values
-  }
-}
-
-/**
- * Disjunction
- * @param truth_value boolean
- * @param disjunct_ids array of ids
- * @param disjunct_truth_values map of disjunct ids to truth_values
- */
-class Disjunction {
-  constructor (props) {
-
   }
 }
 

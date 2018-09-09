@@ -15,7 +15,9 @@ class App extends Component {
     const currentProposition = context.propositions[Object.keys(context.propositions)[propositionIdx]];
 
     this.state = {
-      currentProposition
+      currentProposition, 
+      contradictions: [],
+      contradiction: false
     }
 
     // TODO: hacky
@@ -23,8 +25,41 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { contradiction } = this.state;
     if (prevState.currentProposition && prevState.currentProposition.truth_value !== undefined) {
       this.newCurrentProposition();
+    }
+
+    if (!contradiction) {
+      this.checkContradictions()
+    }
+  }
+
+  checkContradictions = () => {
+    console.log(this.props)
+    const { context } = this.props;
+    const contradictions = [];
+
+    for(let id in context.disjunctions) {
+      const disjunction = context.disjunctions[id];
+
+      if (disjunction.contradiction) {
+        contradictions.push(disjunction);
+      }
+    }
+
+    for(let id in context.propositions) {
+      const proposition = context.propositions[id];
+
+      if (proposition.contradiction) {
+        contradictions.push(proposition);
+      }
+    }
+
+    if (contradictions.length > 0) {
+      console.log(contradictions)
+      console.log('contradiction!')
+      this.setState({contradiction: true, contradictions});
     }
   }
 
@@ -72,7 +107,7 @@ class App extends Component {
         </div>
       </div>
     } else {
-      return <div className="card no-more-propositions">No more propositions!</div>
+      return <div className="card no-more-propositions"><p>No more propositions!</p><p><a href="/">Redo!</a></p></div>
     }
   }
 
@@ -98,13 +133,36 @@ class App extends Component {
     return secondPropositionEls;
   }
 
+  renderContradictions = () => {
+    const { context } = this.props;
+    const { contradictions } = this.state;
+    const disjunctions = context.disjunctions;
+
+    const contradictionEls = contradictions.map(el => {
+      return <li>
+        <p>You said that the following was {el.truth_value}</p>
+        <p>{el.statement ? el.statement : el.disjunct_ids.map(id => disjunctions[id].statement).join(" or ")}</p>
+        <p>However, your other judgments have contradicted the above.</p>
+      </li>
+    });
+
+    <div class="contradictions">
+      <p>We discovered a contradiction!</p>
+      {contradictionEls}  
+    </div>
+  }
+
   render () {
+    const {contradiction} = this.state;
+
+    const userPropositionIds = this.getUserPropositions();
     return (
       <div className="app">
         <div className="header"><p>PhiloMaps</p></div>
+        {contradiction && this.renderContradictions()}
         <div className="content">
           <div className="tower-1">
-            <div className="tower-header"><p>Your propositions</p></div>
+            <div className="tower-header"><p>Your propositions {userPropositionIds.length} </p></div>
             {this.renderUserPropositions()}
           </div>
           <div className="center">
