@@ -38,7 +38,8 @@ class Context {
   updateTruthValue(el, truth_value, isUser = null) {
     isUser = isUser || el.user;
 
-    if (el.truth_value !== undefined && el.truth_value !== truth_value && isUser) {
+    console.log(el.truth_value !== undefined, el.truth_value !== truth_value, el);
+    if (el.truth_value !== undefined && el.truth_value !== truth_value) {
       console.log("contradiction:")
       console.log(el)
       el.contradiction = true;
@@ -192,8 +193,7 @@ class Context {
 
   // User sets proposition truth value
   setPropositionTruthValue = (proposition, truth_value) => {
-    proposition.truth_value = truth_value;
-    proposition.user = true;
+    this.updateTruthValue(proposition, truth_value, true);
     this.conditionalEvaluation(proposition);
     this.propositionsDisjunctionEvaluation(proposition);
     this.forceUpdate();

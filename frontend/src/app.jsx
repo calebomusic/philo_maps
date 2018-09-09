@@ -36,7 +36,6 @@ class App extends Component {
   }
 
   checkContradictions = () => {
-    console.log(this.props)
     const { context } = this.props;
     const contradictions = [];
 
@@ -57,7 +56,6 @@ class App extends Component {
     }
 
     if (contradictions.length > 0) {
-      console.log(contradictions)
       console.log('contradiction!')
       this.setState({contradiction: true, contradictions});
     }
@@ -138,17 +136,17 @@ class App extends Component {
     const { contradictions } = this.state;
     const disjunctions = context.disjunctions;
 
-    const contradictionEls = contradictions.map(el => {
-      return <li>
-        <p>You said that the following was {el.truth_value}</p>
+    const contradictionEls = contradictions.map((el, i) => {
+      return <li key={i}>
+        <p>You said that the following was {el.truth_value ? "true" : "false"}</p>
         <p>{el.statement ? el.statement : el.disjunct_ids.map(id => disjunctions[id].statement).join(" or ")}</p>
         <p>However, your other judgments have contradicted the above.</p>
       </li>
     });
 
-    <div class="contradictions">
+    return <div class="contradictions">
       <p>We discovered a contradiction!</p>
-      {contradictionEls}  
+      <ul class="contradictions-list">{contradictionEls}</ul>
     </div>
   }
 
