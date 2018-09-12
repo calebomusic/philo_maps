@@ -172,8 +172,9 @@ class App extends Component {
       
       return <li key={i}>
         <p>Given <b>Your propositions</b> and their <b>Entailments</b>, the following propositions contradict one another:</p>
-        {sourceProps.map(prop => <p className="card card-contradiction">{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
         <p className="card card-contradiction">{el.truth_value ? "true" : "false"}: {el.statement ? el.statement : el.disjunct_ids.map(id => disjunctions[id].statement).join(" or ")}</p>
+        <br></br>
+        {sourceProps.map(prop => <p className="card card-contradiction source">{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
       </li>
     });
 
@@ -184,7 +185,7 @@ class App extends Component {
 
   renderProposition = (id, i) => {
     let classNames = "card"
-    
+
     if (this.state.currentSourceIds.includes(parseInt(id))) {
       classNames += " source"
     }
