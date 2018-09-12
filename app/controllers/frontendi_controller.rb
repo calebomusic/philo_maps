@@ -3,6 +3,7 @@ class FrontendiController < ApplicationController
     # propositions
     propositions = Proposition.all
     proposition_map = {}
+
     propositions.each do |proposition| 
       obj = proposition.attributes 
       obj[:antecedent_ids] = ConditionalAntecedent.joins(:conditional).where(antecedent_id: proposition.id).pluck("conditionals.id")
