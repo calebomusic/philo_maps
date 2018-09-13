@@ -91,7 +91,7 @@ class App extends Component {
     return proposition_ids.filter((id) => context.propositions[id].user);
   }
 
-  getSecondPropositions = () => {
+  getEntailedPropositions = () => {
     const {context} = this.props;
     const proposition_ids = Object.keys(context.propositions);
     return proposition_ids.filter((id) => context.propositions[id].truth_value !== undefined && !context.propositions[id].user);
@@ -151,15 +151,15 @@ class App extends Component {
     return userPropositionEls;
   }
 
-  renderSecondPropositions = () => {
-    const secondPropositionIds = this.getSecondPropositions();
-    const secondPropositionEls = [];
+  renderentailedPropositions = () => {
+    const entailedPropositionIds = this.getEntailedPropositions();
+    const entailedPropositionEls = [];
 
-    secondPropositionIds.forEach((id, i) => {
-      secondPropositionEls.push(this.renderProposition(id, i));
+    entailedPropositionIds.forEach((id, i) => {
+      entailedPropositionEls.push(this.renderProposition(id, i));
     })
 
-    return secondPropositionEls;
+    return entailedPropositionEls;
   }
 
   renderContradictions = () => {
@@ -171,10 +171,10 @@ class App extends Component {
       const sourceProps = _.uniq(el.sourceIds).map(id => context.propositions[id]);
       
       return <li key={i}>
-        <p>Given <b>Your propositions</b> and their <b>Entailments</b>, the following propositions contradict one another:</p>
+        <p>The following propositions and truth values from <b>Your Propositions</b> and their <b>Entailments</b> entail that a contradiction is true!</p>
         <p className="card card-contradiction">{el.truth_value ? "true" : "false"}: {el.statement ? el.statement : el.disjunct_ids.map(id => disjunctions[id].statement).join(" or ")}</p>
         <br></br>
-        {sourceProps.map(prop => <p className="card card-contradiction source">{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
+        {sourceProps.map((prop) => <p className="card card-contradiction source" key={prop.id}>{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
       </li>
     });
 
@@ -209,23 +209,32 @@ class App extends Component {
 
   render () {
     const {contradiction} = this.state;
-    
+
+    const userPropositionIds = this.getUserPropositions();
+    const entailedPropositionIds = this.getEntailedPropositions();
+
     return (
       <div className="app">
         <div className="header"><p>PhiloMaps</p></div>
         {contradiction && this.renderContradictions()}
         <div className="content">
           <div className="tower-1">
-            <div className="tower-header"><p>Your propositions</p></div>
+            <div className="tower-header">
+              <p>Your propositions</p>
+              <p className="tower-header-sub"><i>{userPropositionIds.length > 0 && "Propositions you have judged end up here!"}</i></p>
+            </div>
             {this.renderUserPropositions()}
           </div>
           <div className="center">
-            <div className="tower-header"><p>Is the following proposition true or false:</p></div>
+            <div className="tower-header"><p>Is the following proposition true or false:</p><br></br></div>
             {this.renderFreeProposition()}
           </div>
           <div className="tower-2">
-            <div className="tower-header"><p>Entailments</p></div>
-            {this.renderSecondPropositions()}
+            <div className="tower-header">
+              <p>Entailments</p>
+              <p className="tower-header-sub"><i>{entailedPropositionIds.length > 0 && "Hover over propositions to see why they are entailed."}</i></p>
+            </div>
+            {this.renderentailedPropositions()}
           </div>
         </div>
       </div>

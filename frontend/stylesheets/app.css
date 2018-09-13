@@ -24,6 +24,8 @@ body {
 .tower-header {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
   border-bottom: 1px solid;
   padding: 2px;
   margin-right: 10px;
@@ -106,4 +108,8 @@ body {
 
 .source {
   background: #FFCDD2
+}
+
+.tower-header-sub {
+  font-size: 10px
 }
