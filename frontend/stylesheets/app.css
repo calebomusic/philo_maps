@@ -113,3 +113,13 @@ body {
 .tower-header-sub {
   font-size: 10px
 }
+
+.skip-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.skip {
+  margin-top: 2px;
+  font-size: 12px;
+}

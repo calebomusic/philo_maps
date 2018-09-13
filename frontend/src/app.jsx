@@ -45,9 +45,11 @@ class App extends Component {
 
   handleKeydown = (e) => {
     if (e.keyCode === 84) {
-      this.trueTouch()
+      this.trueTouch();
     } else if (e.keyCode === 70) {
-      this.falseTouch()
+      this.falseTouch();
+    } else if (e.keyCode === 83) {
+      this.skipTouch();
     }
   }
 
@@ -101,13 +103,8 @@ class App extends Component {
     const {context} = this.props;
     const proposition_ids = Object.keys(context.propositions);
     return proposition_ids.filter((id) => {
-      return context.propositions[id].truth_value === undefined
+      return !context.propositions[id].skipped && context.propositions[id].truth_value === undefined
     });
-
-    // Testing
-    // return proposition_ids.filter((id) => {
-    //   return (id === "22" || id === "24" || id === "27" || id === "20") && context.propositions[id].truth_value === undefined
-    // });
   }
 
   newCurrentProposition = () => {
@@ -129,6 +126,9 @@ class App extends Component {
   renderFreeProposition = () => {
     if (this.state.currentProposition) {
       return <div className="card current-proposition">
+        <div className="skip-btn">
+          <span className="btn skip" onClick={this.skipTouch}>Skip ></span>
+        </div>
         <p><i>{this.state.currentProposition.statement}</i></p>
         <div className="true-false-btns">
           <span className="btn" onClick={this.trueTouch}>True</span>
@@ -151,7 +151,7 @@ class App extends Component {
     return userPropositionEls;
   }
 
-  renderentailedPropositions = () => {
+  renderEntailedPropositions = () => {
     const entailedPropositionIds = this.getEntailedPropositions();
     const entailedPropositionEls = [];
 
@@ -199,6 +199,12 @@ class App extends Component {
     </div>
   }
 
+  skipTouch = () => {
+    const { currentProposition } = this.state;
+    currentProposition.skipped = true;
+    this.newCurrentProposition();
+  }
+
   trueTouch = () => {
     this.props.context.setPropositionTruthValue(this.state.currentProposition, true);
   }
@@ -234,7 +240,7 @@ class App extends Component {
               <p>Entailments</p>
               <p className="tower-header-sub"><i>{entailedPropositionIds.length > 0 && "Hover over propositions to see why they are entailed."}</i></p>
             </div>
-            {this.renderentailedPropositions()}
+            {this.renderEntailedPropositions()}
           </div>
         </div>
       </div>
