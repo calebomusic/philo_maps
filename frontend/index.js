@@ -11,3 +11,14 @@ const TESTING_STATE = JSON.parse('{"conditionals":{"1":{"id":1,"truth_value":fal
 // const context = new Context(TESTING_STATE);
 
 ReactDOM.render(<App context={context} />, document.getElementById("root"));
+
+window.getPwithSI = (state) => {
+  const propositions = state.propositions
+  const results = []
+  for(let propId in propositions) {
+    const prop = propositions[propId]
+    if (prop.sourceIds) results.push(prop)
+  }
+
+  return results
+}

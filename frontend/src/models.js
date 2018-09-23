@@ -55,23 +55,20 @@ class Context {
     // propositions
     const antecedent_ids = conditional.antecedent_ids;
     const antecedent_disjunction_ids = conditional.antecedent_disjunction_ids;
+
+    const id = antecedent_ids[0];
+    const proposition = this.propositions[id];
+    const truth_value = !conditional.antecedent_truth_values[id]
     
+    // Return if proposition already has truth value. This means we will not update source props.
+    if (truth_value === proposition.truth_value) return;
+
     if (antecedent_ids.length === 1) {
-      const id = antecedent_ids[0];
-      const proposition = this.propositions[id];
-      const truth_value = !conditional.antecedent_truth_values[id]
-
-      proposition.sourceIds = proposition.sourceIds || [];
-      proposition.sourceIds = proposition.sourceIds.concat([sourceProposition.id]);
-
+      this.updateSourceIds(proposition, truth_value, [sourceProposition.id])
       this.updateTruthValue(proposition, truth_value);
       this.conditionalEvaluation(proposition);
       this.propositionsDisjunctionEvaluation(proposition);
     } else if (antecedent_disjunction_ids.length === 1) {
-      const id = antecedent_disjunction_ids[0];
-      const disjunction = this.disjunctions[id];
-      const truth_value = !conditional.disjunction_truth_values[id];
-      
       this.updateTruthValue(disjunction, truth_value);
       this.disjunctionEvaluation(disjunction, false);
     } else {
@@ -105,6 +102,12 @@ class Context {
     }
   }
 
+  updateSourceIds(proposition, truth_value, sources) {
+    proposition.sourceIds = proposition.sourceIds || {};
+    proposition.sourceIds[truth_value] = proposition.sourceIds[truth_value] || [];
+    proposition.sourceIds[truth_value] = proposition.sourceIds[truth_value].concat(sources)
+  }
+
   // Handle disjunctions
   // Updates consequents to conditionals' consequent truth_values
   updateConsequents (conditional) {
@@ -118,9 +121,8 @@ class Context {
       const proposition = this.propositions[id];
       if (proposition.truth_value !== conditional.consequent_truth_values[id]) {
         const truth_value = conditional.consequent_truth_values[id];
-        proposition.sourceIds = proposition.sourceIds || [];
-        proposition.sourceIds = proposition.sourceIds.concat(conditional.antecedent_ids);
-
+        
+        this.updateSourceIds(proposition, truth_value, conditional.antecedent_ids);
         this.updateTruthValue(proposition, truth_value);
         this.forceUpdate();
 
@@ -137,9 +139,7 @@ class Context {
       if (disjunction.truth_value !== conditional.disjunction_truth_values[id]) {
         const truth_value = conditional.disjunction_truth_values[id];
 
-        disjunction.sourceIds = disjunction.sourceIds || [];
-        disjunction.sourceIds = disjunction.sourceIds.concat(conditional.antecedent_ids);
-        
+        this.updateSourceIds(disjunction, truth_value, conditional.antecedent_ids);
         this.updateTruthValue(disjunction, truth_value);
         this.forceUpdate();
         console.log(`Updated consequent disjunction ${disjunction.id} to ${disjunction.truth_value}`)
@@ -203,7 +203,6 @@ class Context {
 
   // User sets proposition truth value
   setPropositionTruthValue = (proposition, truth_value) => {
-    this.sourceIds = [proposition.id];
     this.updateTruthValue(proposition, truth_value, true);
     this.conditionalEvaluation(proposition);
     this.propositionsDisjunctionEvaluation(proposition);
@@ -227,9 +226,7 @@ class Context {
       if (disjunct.truth_value === truth_value) {
         console.log(`Disjunction ${disjunction.id} obtains`)
 
-        disjunction.sourceIds = disjunction.sourceIds || [];
-        disjunction.sourceIds = disjunction.sourceIds.concat([disjunct.id]);
-
+        this.updateSourceIds(disjunction, truth_value, [disjunct.id])
         this.updateTruthValue(disjunction, true, isUser);
         console.log(`Begin modus and tollens check for disjunction ${disjunction.id}`)
         // Update disjunctions
