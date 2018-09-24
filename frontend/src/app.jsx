@@ -175,42 +175,45 @@ class App extends Component {
 
       const guiltyProp = (truth_value) => <p className="card card-contradiction">{truth_value !== undefined ? `${truth_value}:` : null}  {el.statement ? el.statement : el.disjunct_ids.map(id => disjunctions[id].statement).join(" or ")}</p>;
       const truthValueString = el.truth_value ? "true" : "false";
+      const width = el.user && trueSourceProps.length > 0 && falseSourceProps.length > 0 ? "30%" : "45%";
 
-      return <li key={i}>
-        <br></br>
-        { 
-          el.user ? 
-          <div>
-            <p>The following propositions and truth values from <b>Your Propositions</b> and their <b>Entailments</b> entail a contradiction!</p>
-            <p>You said that the following proposition was <b>{truthValueString}</b>:</p>
-            {guiltyProp(truthValueString)}
-          </div> : 
-          <div>
-            <p>The following propositions and truth values from <b>Your Propositions</b> and their <b>Entailments</b> entail that a contradiction is true!</p>
-          </div>
-        }
-        <br></br>
-        {
-          trueSourceProps.length > 0 ?
-          <span>
-            <p>The proposition{trueSourceProps.length > 1 ? "s" : null}:</p>    
-            {trueSourceProps.map((prop) => <p className="card card-contradiction source" key={prop.id}>{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
-            <p>Entail that: </p>
-            {guiltyProp()}
-            <p>Is <b>true</b>!</p>
-          </span> : null
-        }
-        <br></br>
-        {
-          falseSourceProps.length > 0 ?
-          <span>
-            <p>{trueSourceProps.length > 0 ? "And " : "However, "}the proposition{falseSourceProps.length > 1 ? "s" : null}:</p>    
-            {falseSourceProps.map((prop) => <p className="card card-contradiction source" key={prop.id}>{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
-            <p>Entail that:</p>
-            {guiltyProp()}
-            <p>Is <b>false</b>!</p>
-          </span> : null
-        }
+      return <li key={i} className="contradiction-table">
+        <div className="contradiction-header">
+          <p>The following propositions and truth values from <b>Your Propositions</b> and their <b>Entailments</b> entail a contradiction!</p>
+        </div>
+        <div className="contradiction-cols">
+          { 
+            el.user ? 
+            <div style={{width}}>
+              <p>You said that the proposition:</p>
+              {guiltyProp()}
+              <p>was <b>{truthValueString}</b>.</p>
+            </div> : 
+            null
+          }
+          <br></br>
+          {
+            trueSourceProps.length > 0 ?
+            <div style={{width}}>
+              <p>{el.user ? "However, t" : "T"}he proposition{trueSourceProps.length > 1 ? "s" : null} and {trueSourceProps.length > 1 ? "their truth values" : "its truth value"}:</p>
+              {trueSourceProps.map((prop) => <p className="card card-contradiction source" key={prop.id}>{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
+              <p>Entail{trueSourceProps.length === 1 ? "s" : null} that: </p>
+              {guiltyProp()}
+              <p>Is <b>true</b>!</p>
+            </div> : null
+          }
+          <br></br>
+          {
+            falseSourceProps.length > 0 ?
+            <div style={{width}}>
+              <p>{trueSourceProps.length > 0 ? "And " : "However, "}the{falseSourceProps.length > 1 ? "se" : null} proposition{falseSourceProps.length > 1 ? "s" : null} and  {falseSourceProps.length > 1 ? "their truth values" : "its truth value"}:</p>    
+              {falseSourceProps.map((prop) => <p className="card card-contradiction source" key={prop.id}>{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
+              <p>Entail{falseSourceProps.length === 1 ? "s" : null} that:</p>
+              {guiltyProp()}
+              <p>Is <b>false</b>!</p>
+            </div> : null
+          }
+        </div>
       </li>
     });
 

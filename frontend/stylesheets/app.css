@@ -123,3 +123,23 @@ body {
   margin-top: 2px;
   font-size: 12px;
 }
+
+.contradiction-cols {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+
+.contradiction-table {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.contradiction-header {
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+}
