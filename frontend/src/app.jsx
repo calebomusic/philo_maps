@@ -247,7 +247,7 @@ class App extends Component {
   }
 
   falseTouch = () => {
-    this.props.context.setPropositionTruthValue(this.state.currentProposition, true);
+    this.props.context.setPropositionTruthValue(this.state.currentProposition, false);
   }
 
   render () {
