@@ -187,7 +187,7 @@ class App extends Component {
             <div style={{width}}>
               <p>You said that the proposition:</p>
               {guiltyProp()}
-              <p>was <b>{truthValueString}</b>.</p>
+              <p>is <b>{truthValueString}</b>.</p>
             </div> : 
             null
           }
@@ -199,7 +199,7 @@ class App extends Component {
               {trueSourceProps.map((prop) => <p className="card card-contradiction source" key={prop.id}>{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
               <p>Entail{trueSourceProps.length === 1 ? "s" : null} that: </p>
               {guiltyProp()}
-              <p>Is <b>true</b>!</p>
+              <p>is <b>true</b>!</p>
             </div> : null
           }
           <br></br>
@@ -210,7 +210,7 @@ class App extends Component {
               {falseSourceProps.map((prop) => <p className="card card-contradiction source" key={prop.id}>{prop.truth_value ? "true" : "false"}: {prop.statement}</p>)}
               <p>Entail{falseSourceProps.length === 1 ? "s" : null} that:</p>
               {guiltyProp()}
-              <p>Is <b>false</b>!</p>
+              <p>is <b>false</b>!</p>
             </div> : null
           }
         </div>
